@@ -1,0 +1,37 @@
+--Write a query that returns the last 3 letter of the base name in other_FHV_services_jan_aug_2015.  INC is socmmon last 3 letters
+SELECT RIGHT (Base_Name, 3) AS last_three_letters
+FROM other_FHV_services_jan_aug_2015
+
+--Write a query that returns the location of spaces in both number of trips and number of pick ups columnms
+SELECT Base_Name,
+CHARINDEX (' ', number_of_trips) AS space_in_trips,
+CHARINDEX (' ', Number_of_Vehicles) AS space_in_pickups
+FROM other_FHV_services_jan_aug_2015
+
+--Display name of month of pick up date and display order in descending order
+SELECT DATENAME(month, pick_up_date) AS month
+FROM other_FHV_services_jan_aug_2015
+ORDER BY month DESC
+
+SELECT MONTH(pick_up_date) AS Month
+FROM other_FHV_services_jan_aug_2015
+ORDER BY month DESC
+
+--Query that returns pick up day number and month name and orders in ascending order by day number
+SELECT DAY(pick_up_date) AS Day_Number, 
+DATENAME(month, Pick_Up_Date) AS Month
+FROM other_FHV_services_jan_aug_2015
+ORDER BY Day_Number ASC
+
+--Write Query that returns most easterly lyft pickup - Returns -73.72315
+SELECT MAX(start_lng) AS easterly
+FROM lyft
+
+--Write Query that returns most northerly lyft pickup - returns 40.93562
+SELECT MAX(start_lat) AS Northerly
+FROM lyft
+
+
+--write a query that connects the base number and the base name in a string that uses the following format base_number: base_name
+SELECT base_number + ': ' + base_name AS Base_info
+FROM other_FHV_services_jan_aug_2015
