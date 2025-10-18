@@ -1,0 +1,184 @@
+-- Query 1: LEFT JOIN
+SELECT TOP 50 b.title, b.average_rating, b.books_count,tr.user_id, tr.book_id
+FROM BooksDB.dbo.books AS b
+LEFT JOIN BooksDB.dbo.to_read AS tr
+ON b.best_book_id = tr.book_id
+ORDER BY b.average_rating;
+
+-- Query 2: LEFT JOIN USING 'IS NOT NULL'
+SELECT TOP 50 b.title, b.average_rating, b.books_count,tr.user_id, tr.book_id
+FROM BooksDB.dbo.books AS b
+LEFT JOIN BooksDB.dbo.to_read AS tr
+ON b.best_book_id = tr.book_id
+WHERE tr.user_id IS NOT NULL
+ORDER BY b.average_rating;
+
+SELECT TOP 300 b.title, b.average_rating, b.books_count, tr.user_id, tr.book_id
+FROM BooksDB.dbo.books AS b
+RIGHT JOIN BooksDB.dbo.to_read AS tr
+ON b.best_book_id = tr.book_id;
+
+SELECT TOP 30 b.title, b.average_rating, b.books_count,tr.user_id, tr.book_id
+FROM BooksDB.dbo.books AS b
+FULL JOIN BooksDB.dbo.to_read AS tr
+ON b.book_id = tr.book_id;
+
+SELECT TOP 30 b.title, b.average_rating, b.books_count,tr.user_id, tr.book_id
+FROM BooksDB.dbo.books AS b
+FULL JOIN BooksDB.dbo.to_read AS tr
+ON b.book_id = tr.book_id
+WHERE b.title IS NOT NULL
+ORDER BY b.average_rating ASC
+
+SELECT TOP 1 b.title,
+SUM(bt. [count]) AS total_times_tagged
+FROM BooksDB.dbo.books as b
+JOIN BooksDB.dbo.book_tags as bt
+ON b.best_book_id = bt.goodreads_book_id
+group by b.title
+order by total_times_tagged desc
+
+--STUDIO
+SELECT t.tag_id as tag,
+t.tag_name as name,
+COUNT(bt.tag_id) as tag_count
+FROM booksDB.dbo.book_tags as bt
+JOIN BOOKSDB.DBO.TAGS AS t
+ON bt.tag_id = t.tag_id
+GROUP BY t.tag_id, t.tag_name
+HAVING t.tag_name LIKE '%female%'
+OR t.tag_name LIKE '%woman%'
+OR t.tag_name LIKE '%women%'
+or t.Tag_name LIKE '%lady%'
+ORDER BY tag_count DESC
+
+SELECT b.authors as authors, 
+b.original_title AS title, 
+b.average_rating as rating
+FROM booksDB.dbo.books as b
+JOIN booksdb.dbo.book_tags as bt
+on b.best_book_id = bt.goodreads_book_id
+WHERE bt.tag_name LIKE '%pi%'
+OR bt.tag_name LIKE '%pie%'
+or bt.Tag_name LIKE '%314%'
+ORDER BY tag_count DESC
+
+SELECT
+    b.authors,
+    b.original_title AS title,
+    b.average_rating AS rating,
+    t.tag_name AS tag
+FROM BooksDB.dbo.books      AS b
+JOIN BooksDB.dbo.book_tags  AS bt
+    ON b.best_book_id = bt.goodreads_book_id
+JOIN BooksDB.dbo.tags       AS t
+    ON bt.tag_id = t.tag_id
+   where t.tag_name LIKE '%spring%'
+   OR t.tag_name LIKE '%april%'
+   OR t.tag_name LIKE '%bloom%'
+ORDER BY b.average_rating DESC
+
+SELECT
+    b.authors,
+    b.original_title AS title,
+    b.average_rating AS rating,
+    t.tag_name AS tag
+FROM BooksDB.dbo.books      AS b
+JOIN BooksDB.dbo.book_tags  AS bt
+    ON b.best_book_id = bt.goodreads_book_id
+JOIN BooksDB.dbo.tags       AS t
+    ON bt.tag_id = t.tag_id
+   where t.tag_name LIKE '%groundhog%'
+   OR t.tag_name LIKE '%shadow%'
+   OR t.tag_name LIKE '%gopher%'
+ORDER BY b.average_rating DESC
+
+SELECT
+    b.authors,
+    b.original_title AS title,
+    b.average_rating AS rating,
+    t.tag_name AS tag
+FROM BooksDB.dbo.books      AS b
+JOIN BooksDB.dbo.book_tags  AS bt
+    ON b.best_book_id = bt.goodreads_book_id
+JOIN BooksDB.dbo.tags       AS t
+    ON bt.tag_id = t.tag_id
+   where t.tag_name LIKE '%groundhog%'
+   OR t.tag_name LIKE '%shadow%'
+   OR t.tag_name LIKE '%gopher%'
+ORDER BY b.average_rating DESC
+
+SELECT
+    b.authors,
+    b.original_title AS title,
+    b.average_rating AS rating,
+    t.tag_name AS tag
+FROM BooksDB.dbo.books      AS b
+JOIN BooksDB.dbo.book_tags  AS bt
+    ON b.best_book_id = bt.goodreads_book_id
+JOIN BooksDB.dbo.tags       AS t
+    ON bt.tag_id = t.tag_id
+   where t.tag_name LIKE '%birthday%'
+   OR t.tag_name LIKE '%aging%'
+   OR t.tag_name LIKE '%party%'
+ORDER BY b.average_rating DESC
+
+
+SELECT
+    b.authors,
+    b.original_title AS title,
+    b.average_rating AS rating,
+    t.tag_name AS tag,
+    t.tag_id as ID
+FROM BooksDB.dbo.books      AS b
+JOIN BooksDB.dbo.book_tags  AS bt
+    ON b.best_book_id = bt.goodreads_book_id
+JOIN BooksDB.dbo.tags       AS t
+    ON bt.tag_id = t.tag_id
+   where t.tag_name LIKE '%climbing%'
+ORDER BY b.average_rating DESC
+
+--My tag is climbing.  Tag ID is 7526
+
+SELECT TOP 1
+b.title,
+t.tag_name,
+t.tag_id,
+bt.count AS tag_count
+FROM BooksDB.dbo.book_tags bt
+JOIN BooksDB.dbo.books b
+ON b.best_book_id = bt.goodreads_book_id
+JOIN BooksDB.dbo.tags t
+ON t.tag_id = bt.tag_id
+WHERE bt.tag_id = 7526
+ORDER BY bt.count desc
+
+SELECT 
+b.title as book_title,
+count(DISTINCT tr.user_id) AS #_users_interested
+FROM BooksDB.dbo.to_read as tr
+JOIN BooksDB.dbo.books AS b
+ON b.book_id = tr.book_id
+GROUP BY b.title
+ORDER BY #_users_interested DESC;
+
+SELECT TOP 10
+user_id,
+COUNT(book_id) AS num_titles_on_to_read_list
+FROM BooksDB.dbo.to_read
+GROUP BY user_id
+ORDER BY num_titles_on_to_read_list DESC
+
+SELECT user_id, COUNT(book_id) AS num_titles_on_to_read_list
+FROM BooksDB.dbo.to_read
+GROUP BY user_id
+HAVING COUNT(book_id) = 15
+
+SELECT 
+tr.user_id,
+b.title
+FROM booksDB.dbo.to_read AS tr
+JOIN  booksDB.dbo.books aS b
+on b.booK_id = tr.book_id
+WHERE tr.user_id = 5021
+
