@@ -1,0 +1,66 @@
+
+
+--1. ratings_above_average returned 40960
+SELECT COUNT(*) AS ratings_above_average
+FROM booksdb.dbo.ratings AS r
+WHERE r.rating > (
+    SELECT b.average_rating
+    FROM booksdb.dbo.books AS b
+    WHERE b.book_id = r.book_id
+)
+
+--2. Write a query that returns the book ids of all books that have over 1000 ratings of 1 star or over 1000 ratings of 5 stars 
+SELECT book_id as over_1000_1_or_5_stars
+FROM booksDB.dbo.books
+WHERE ratings_1 > 1000
+UNION 
+SELECT book_id as over_1000_1_or_5_stars
+FROM booksDB.dbo.books
+WHERE ratings_5 > 1000
+
+--3.Write a query that returns the book ids of all books that have over 1000 ratings of 1 star and over 1000 ratings of 5 stars 
+SELECT book_id as over_1000_1_and_5_stars
+FROM booksDB.dbo.books
+WHERE ratings_1 > 1000
+INTERSECT
+SELECT book_id as over_1000_1_or_5_stars
+FROM booksDB.dbo.books
+WHERE ratings_5 > 1000
+
+-- I want to put these in two separate columns
+SELECT book_id,
+ratings_1 AS one_star,
+ratings_5 AS five_stars
+FROM booksDB.dbo.books
+WHERE book_id IN (
+    SELECT book_id
+    FROM booksDB.dbo.books
+    WHERE ratings_1 > 1000
+    INTERSECT
+    SELECT book_id
+    FROM booksDB.dbo.books
+    WHERE ratings_5 > 1000
+)
+
+--4. write a query that returns the book ids that have a language code of “en-US” and not a language code of “en-GB”.  language_code 
+select book_id AS language_is_en_US
+from booksdb.dbo.books
+WHERE language_code = 'en-US'
+EXCEPT 
+select book_id
+from booksdb.dbo.books
+WHERE language_code = 'en-GB'
+
+--5.write a query that returns the names of the tags and the tag ids for tags that were used over 100000 times for a book 
+--not confident in query 
+SELECT t.tag_id, t.tag_name
+FROM booksdb.dbo.tags AS t
+WHERE (
+SELECT MAX(bt.[count])
+FROM Booksdb.dbo.book_tags AS bt
+WHERE bt.tag_id = t.tag_id
+) > 100000
+
+
+
+
