@@ -61,5 +61,3 @@ FROM Booksdb.dbo.book_tags AS bt
 WHERE bt.tag_id = t.tag_id
 ) > 100000
 
-
-
